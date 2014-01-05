@@ -1,0 +1,6 @@
+for compile programm:
+	gcc -o NAME NAME.c -lrt -lbcm2835
+for run programm:
+	sudo ./NAME
+for change keyboard layout:
+	setxkbmap COUNTRY_CODE
