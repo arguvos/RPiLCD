@@ -22,38 +22,57 @@ int init()
 	bcm2835_gpio_fsel(LCD_D7, BCM2835_GPIO_FSEL_OUTP);
 	return 0;
 }
-//TODO: complit function setposition
-void setposition()
-{
-  bcm2835_gpio_write(LCD_RS, LOW);	//RS=1
-  bcm2835_delay(1);
 
-// High bits
-  bcm2835_gpio_write(LCD_D4, LOW);
-  bcm2835_gpio_write(LCD_D5, LOW);
-  bcm2835_gpio_write(LCD_D6, LOW);
-  bcm2835_gpio_write(LCD_D7, HIGH);
-  bcm2835_delay(1);
-
-// Toggle 'Enable' pin
-  bcm2835_delay(1);  
-  bcm2835_gpio_write(LCD_E, HIGH); //LCD_E
-  bcm2835_gpio_write(LCD_E, LOW); //LCD_E
-  bcm2835_delay(1);
-  
-// Low bits
-  bcm2835_gpio_write(LCD_D4, LOW); //LCD_D4
-  bcm2835_gpio_write(LCD_D5, LOW); //LCD_D5
-  bcm2835_gpio_write(LCD_D6, LOW); //LCD_D6
-  bcm2835_gpio_write(LCD_D7, LOW); //LCD_D7
-  bcm2835_delay(1);
-      
-// Toggle 'Enable' pin  
-  bcm2835_gpio_write(LCD_E, HIGH); //LCD_E
-  bcm2835_gpio_write(LCD_E, LOW); //LCD_E
-  bcm2835_delay(1);
+//Set DDRAM address
+void setposition(char data)
+{	
+	bcm2835_gpio_write(LCD_RS, LOW);
+	delay(1);
+	
+	bcm2835_gpio_write(LCD_D4, LOW);
+	bcm2835_gpio_write(LCD_D5, LOW);
+	bcm2835_gpio_write(LCD_D6, LOW);
+	bcm2835_gpio_write(LCD_D7, LOW);
+	if ((data&0x10)==0x10)
+		bcm2835_gpio_write(LCD_D4, HIGH);
+	if ((data&0x20)==0x20)
+		bcm2835_gpio_write(LCD_D5, HIGH);
+	if ((data&0x40)==0x40)
+		bcm2835_gpio_write(LCD_D6, HIGH);
+	if ((data&0x80)==0x80)
+		bcm2835_gpio_write(LCD_D7, HIGH);    
+	delay(1);
+	
+	bcm2835_gpio_write(LCD_E, HIGH);
+	bcm2835_gpio_write(LCD_E, LOW);
+	delay(1);
+	
+	bcm2835_gpio_write(LCD_D4, LOW);
+	bcm2835_gpio_write(LCD_D5, LOW);
+	bcm2835_gpio_write(LCD_D6, LOW);
+	bcm2835_gpio_write(LCD_D7, LOW);
+	if ((data&0x01)==0x01)
+		bcm2835_gpio_write(LCD_D4, HIGH);
+	if ((data&0x02)==0x02)
+		bcm2835_gpio_write(LCD_D5, HIGH);
+	if ((data&0x04)==0x04)
+		bcm2835_gpio_write(LCD_D6, HIGH);
+	if ((data&0x08)==0x08)
+		bcm2835_gpio_write(LCD_D7, HIGH);    
+	delay(1);
+	
+	bcm2835_gpio_write(LCD_E, HIGH);
+	bcm2835_gpio_write(LCD_E, LOW);
+	delay(1);
+	
+	bcm2835_gpio_write(LCD_D4, HIGH);
+	bcm2835_gpio_write(LCD_D5, HIGH);
+	bcm2835_gpio_write(LCD_D6, HIGH);
+	bcm2835_gpio_write(LCD_D7, HIGH);
+	delay(1);  
 }
 
+//Write data to RAM
 void writechar(char data)
 {
 	bcm2835_gpio_write(LCD_RS, HIGH);

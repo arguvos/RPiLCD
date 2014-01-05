@@ -1,7 +1,7 @@
 TODO:
 -for writing information on LCD
 	+write Data to RAM
-	-set DDRAM Address
+	+set DDRAM Address
 	-set CGRAM Address
 	-Function Set
 	-Cursor or Display Shift
