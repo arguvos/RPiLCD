@@ -19,69 +19,53 @@ int init()
 	bcm2835_gpio_fsel(LCD_D4, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(LCD_D5, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(LCD_D6, BCM2835_GPIO_FSEL_OUTP);
-	bcm2835_gpio_fsel(LCD_D7, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(LCD_D7, BCM2835_GPIO_FSEL_OUTP);	
+	turn_off_pin(1);
 	return 0;
 }
 
-//Set DDRAM address
-void setposition(char data)
+void init_LCD()
 {	
-	bcm2835_gpio_write(LCD_RS, LOW);
-	delay(1);
+	//function set
+	send_data_8bit(0x20);	
+	send_data_8bit(0x20);
+	send_data_8bit(0xC0);
+	delay(5);
 	
-	bcm2835_gpio_write(LCD_D4, LOW);
-	bcm2835_gpio_write(LCD_D5, LOW);
-	bcm2835_gpio_write(LCD_D6, LOW);
-	bcm2835_gpio_write(LCD_D7, LOW);
-	if ((data&0x10)==0x10)
-		bcm2835_gpio_write(LCD_D4, HIGH);
-	if ((data&0x20)==0x20)
-		bcm2835_gpio_write(LCD_D5, HIGH);
-	if ((data&0x40)==0x40)
-		bcm2835_gpio_write(LCD_D6, HIGH);
-	if ((data&0x80)==0x80)
-		bcm2835_gpio_write(LCD_D7, HIGH);    
-	delay(1);
+	//display on/off
+	send_data_8bit(0x00);
+	send_data_8bit(0xC0);
+	delay(5);
 	
-	bcm2835_gpio_write(LCD_E, HIGH);
-	bcm2835_gpio_write(LCD_E, LOW);
-	delay(1);
+	//desplay clear
+	send_data_8bit(0x00);
+	send_data_8bit(0x10);
+	delay(5);
 	
-	bcm2835_gpio_write(LCD_D4, LOW);
-	bcm2835_gpio_write(LCD_D5, LOW);
-	bcm2835_gpio_write(LCD_D6, LOW);
-	bcm2835_gpio_write(LCD_D7, LOW);
-	if ((data&0x01)==0x01)
-		bcm2835_gpio_write(LCD_D4, HIGH);
-	if ((data&0x02)==0x02)
-		bcm2835_gpio_write(LCD_D5, HIGH);
-	if ((data&0x04)==0x04)
-		bcm2835_gpio_write(LCD_D6, HIGH);
-	if ((data&0x08)==0x08)
-		bcm2835_gpio_write(LCD_D7, HIGH);    
-	delay(1);
-	
-	bcm2835_gpio_write(LCD_E, HIGH);
-	bcm2835_gpio_write(LCD_E, LOW);
-	delay(1);
-	
-	bcm2835_gpio_write(LCD_D4, HIGH);
-	bcm2835_gpio_write(LCD_D5, HIGH);
-	bcm2835_gpio_write(LCD_D6, HIGH);
-	bcm2835_gpio_write(LCD_D7, HIGH);
-	delay(1);  
+	//entry mode set
+	send_data_8bit(0x00);
+	send_data_8bit(0x60);
+	delay(5);	
 }
 
-//Write data to RAM
-void writechar(char data)
+void turn_off_pin(char logicPIN)
+{
+	if (logicPIN==1)
+	{
+		bcm2835_gpio_write(LCD_RS, LOW);
+		bcm2835_gpio_write(LCD_E, LOW);
+	}
+	bcm2835_gpio_write(LCD_D4, LOW);
+	bcm2835_gpio_write(LCD_D5, LOW);
+	bcm2835_gpio_write(LCD_D6, LOW);
+	bcm2835_gpio_write(LCD_D7, LOW);
+}
+
+void write_data(char data)
 {
 	bcm2835_gpio_write(LCD_RS, HIGH);
 	delay(1);
 	
-	bcm2835_gpio_write(LCD_D4, LOW);
-	bcm2835_gpio_write(LCD_D5, LOW);
-	bcm2835_gpio_write(LCD_D6, LOW);
-	bcm2835_gpio_write(LCD_D7, LOW);
 	if ((data&0x10)==0x10)
 		bcm2835_gpio_write(LCD_D4, HIGH);
 	if ((data&0x20)==0x20)
@@ -96,10 +80,7 @@ void writechar(char data)
 	bcm2835_gpio_write(LCD_E, LOW);
 	delay(1);
 	
-	bcm2835_gpio_write(LCD_D4, LOW);
-	bcm2835_gpio_write(LCD_D5, LOW);
-	bcm2835_gpio_write(LCD_D6, LOW);
-	bcm2835_gpio_write(LCD_D7, LOW);
+	turn_off_pin(0);	
 	if ((data&0x01)==0x01)
 		bcm2835_gpio_write(LCD_D4, HIGH);
 	if ((data&0x02)==0x02)
@@ -114,9 +95,61 @@ void writechar(char data)
 	bcm2835_gpio_write(LCD_E, LOW);
 	delay(1);
 	
-	bcm2835_gpio_write(LCD_D4, HIGH);
-	bcm2835_gpio_write(LCD_D5, HIGH);
-	bcm2835_gpio_write(LCD_D6, HIGH);
-	bcm2835_gpio_write(LCD_D7, HIGH);
+	turn_off_pin(1);
 	delay(1);
+}
+
+void send_data_8bit(char data)
+{		
+	if ((data&0x10)==0x10)
+		bcm2835_gpio_write(LCD_D4, HIGH);
+	if ((data&0x20)==0x20)
+		bcm2835_gpio_write(LCD_D5, HIGH);
+	if ((data&0x40)==0x40)
+		bcm2835_gpio_write(LCD_D6, HIGH);
+	if ((data&0x80)==0x80)
+		bcm2835_gpio_write(LCD_D7, HIGH);    
+	delay(1);
+	
+	bcm2835_gpio_write(LCD_E, HIGH);
+	bcm2835_gpio_write(LCD_E, LOW);
+	delay(1);	
+	
+	turn_off_pin(1);
+	delay(1);
+}
+
+void send_data_4bit(char data)
+{	
+	if ((data&0x10)==0x10)
+		bcm2835_gpio_write(LCD_D4, HIGH);
+	if ((data&0x20)==0x20)
+		bcm2835_gpio_write(LCD_D5, HIGH);
+	if ((data&0x40)==0x40)
+		bcm2835_gpio_write(LCD_D6, HIGH);
+	if ((data&0x80)==0x80)
+		bcm2835_gpio_write(LCD_D7, HIGH);    
+	delay(1);
+	
+	bcm2835_gpio_write(LCD_E, HIGH);
+	bcm2835_gpio_write(LCD_E, LOW);
+	delay(1);
+	
+	turn_off_pin(0);
+	if ((data&0x01)==0x01)
+		bcm2835_gpio_write(LCD_D4, HIGH);
+	if ((data&0x02)==0x02)
+		bcm2835_gpio_write(LCD_D5, HIGH);
+	if ((data&0x04)==0x04)
+		bcm2835_gpio_write(LCD_D6, HIGH);
+	if ((data&0x08)==0x08)
+		bcm2835_gpio_write(LCD_D7, HIGH);    
+	delay(1);
+	
+	bcm2835_gpio_write(LCD_E, HIGH);
+	bcm2835_gpio_write(LCD_E, LOW);
+	delay(1);
+	
+	turn_off_pin(1);
+	delay(1);  
 }
