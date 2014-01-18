@@ -3,15 +3,15 @@ GRD---->GRD		(6)
 +5----->5v		(2)
 CST---->GRD		(6)
 RS----->SP10_CE1_N	(26)
-R/W---->none
+R/W---->GRD		(6)
 E------>SP10_CE0_N	(24)
-DB0---->GPIO_22		(15)
-DB1---->GPIO_22		(13)
-DB2---->GPIO_22		(11)
-DB3---->GPIO_22		(7)
-DB4---->GPIO_22		(22)
-DB5---->GPIO_22		(18)
-DB6---->GPIO_22		(16)
-DB7---->GPIO_22		(12)
+DB0---->none
+DB1---->none
+DB2---->none
+DB3---->none
+DB4---->GPIO_25		(22)
+DB5---->GPIO_24		(18)
+DB6---->GPIO_23		(16)
+DB7---->GPIO_18		(12)
 LED+--->5v		(2)
 LED---->GRD		(6)
