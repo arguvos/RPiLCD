@@ -16,7 +16,7 @@ void error(char msg[], char ctrl)
     if (ctrl==1)
 	{		
 		close(sfd);
-		printf("Program close.");	
+		printf("Program close.\n");	
 		exit(0);
 	}	
 }
@@ -26,7 +26,7 @@ void con()
 	sfd = socket(AF_INET, SOCK_STREAM, 0);
 
     saddr.sin_family = AF_INET;
-    saddr.sin_port = htons(3425);
+    saddr.sin_port = htons(3426);
     saddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     
     if (connect(sfd,(struct sockaddr *) &saddr,sizeof(saddr)) < 0) 
@@ -47,7 +47,7 @@ void send_data(char str[])
     if (n < 0) 
          error("ERROR reading from socket", 0);
     else
-		printf("Data delivered.\n");
+		printf("Data delivered.\n\n");
 }
 
 int main()
@@ -61,10 +61,11 @@ int main()
 		bzero(str,44);
 		fgets(str,44,stdin);
 		
-		if (strncmp(str,"com:",4)==0||strncmp(str,"str:",4)==0||strncmp(str,"exit",4)!=0)
+		if (strncmp(str,"com:",4)==0||strncmp(str,"str:",4)==0)
 			send_data(str);
 		else
-			error("ERROR, in input data\n", 0);
+			if (strncmp(str,"exit",4)!=0)
+				error("ERROR, in input data\n", 0);
 	} while (strncmp(str,"exit",4));
 	
     close(sfd);
