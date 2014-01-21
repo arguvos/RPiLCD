@@ -1,3 +1,17 @@
+info for work with server:
+for write string you should write: 
+	str:"your_str" 
+to send a command for LCD write:
+	com:"YOUR_COMMAND"
+available commands:
+	LINE_1 -set line one to write text
+	LINE_2 -set line two to write text
+	CLEAR -clear lcd
+	SET_LINE_1 -set one line mode
+	SET_LINE_2 -set two line mode
+
+
+info for work with raspberry pi:
 for compile programm:
 	gcc -o NAME_DIR NAME_FILE.c -lrt -lbcm2835
 for run programm:
