@@ -6,7 +6,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-	int sfd;
+#include "project.c"
+
+	int sfd, cfd;
 	struct sockaddr_in saddr;
         
 void error(char msg[], char ctrl)
@@ -25,14 +27,38 @@ void con()
 	sfd= socket(AF_INET, SOCK_STREAM, 0);
     saddr.sin_family=AF_INET;
     saddr.sin_addr.s_addr=htonl(INADDR_ANY);
-    saddr.sin_port=htons(3425);
+    saddr.sin_port=htons(3426);
     
     if (bind(sfd, (struct sockaddr *)&saddr, sizeof(saddr)) < 0)
 		error("ERROR on binding", 1);
     listen(sfd, 1);
-    sfd=accept(sfd, (struct sockaddr *) NULL, NULL);
+    cfd=accept(sfd, (struct sockaddr *) NULL, NULL);
     if (sfd < 0)
 		error("ERROR on accept", 1); 
+}
+
+void recogniting_msg(char *str)
+{
+	int i;
+	
+	if (strncmp(str, "str:", 4)==0)
+	{		
+		for(i=4; str[i]!='\n'; i++)
+			lcd_byte_4bit(str[i], LCD_CHR);
+	}
+	else
+	{
+		if (strncmp(str, "com:LINE_1", 10)==0)
+			lcd_byte_4bit(LCD_LINE_1, LCD_CMD);
+		if (strncmp(str, "com:LINE_2", 10)==0)
+			lcd_byte_4bit(LCD_LINE_2, LCD_CMD);
+		if (strncmp(str, "com:CLEAR", 10)==0)
+			lcd_byte_4bit(0x01, LCD_CMD);
+		if (strncmp(str, "com:SET_LINE_1", 10)==0)
+			lcd_byte_4bit(0x20, LCD_CMD);
+		if (strncmp(str, "com:SET_LINE_2", 10)==0)
+			lcd_byte_4bit(0x28, LCD_CMD);
+	}
 }
 
 int main()
@@ -42,16 +68,18 @@ int main()
 	int n=0;
  
 	con();
- 
+ 	init();
+	//init_LCD(1,1,0);
+
 	do{
 		bzero(str,44);		     
-		n = read(sfd,str,44);
+		n = read(cfd,str,44);
 		if (n < 0) error("ERROR reading from socket", 0);
-			printf("Here is the message: %s\n",str);
-		n = write(sfd,&c,sizeof(c));
+			recogniting_msg(str);
+		n = write(cfd,&c,sizeof(c));
 		if (n < 0) error("ERROR writing to socket", 0);    
-	}while (strncmp(str,"com:close_server",16));
+	}while (strncmp(str,"com:CLOSE_SERVER",16));
 	
-    close(sfd);
+    close(cfd);
     return 0; 
 }
