@@ -50,13 +50,13 @@ void recogniting_msg(char *str)
 	{
 		if (strncmp(str, "com:LINE_1", 10)==0)
 			lcd_byte_4bit(LCD_LINE_1, LCD_CMD);
-		if (strncmp(str, "com:LINE_2", 10)==0)
+		else if (strncmp(str, "com:LINE_2", 10)==0)
 			lcd_byte_4bit(LCD_LINE_2, LCD_CMD);
-		if (strncmp(str, "com:CLEAR", 10)==0)
+		else if (strncmp(str, "com:CLEAR", 9)==0)
 			lcd_byte_4bit(0x01, LCD_CMD);
-		if (strncmp(str, "com:SET_LINE_1", 10)==0)
+		else if (strncmp(str, "com:SET_LINE_1", 14)==0)
 			lcd_byte_4bit(0x20, LCD_CMD);
-		if (strncmp(str, "com:SET_LINE_2", 10)==0)
+		else if (strncmp(str, "com:SET_LINE_2", 14)==0)
 			lcd_byte_4bit(0x28, LCD_CMD);
 	}
 }
@@ -69,7 +69,7 @@ int main()
  
 	con();
  	init();
-	//init_LCD(1,1,0);
+	init_LCD(1,1,0);
 
 	do{
 		bzero(str,44);		     
