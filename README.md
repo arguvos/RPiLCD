@@ -1,12 +1,11 @@
 #RPiLCD
-###Raspberry Pi + LCD
-
-![image](http://h78563.s06.test-hf.su/images/RPiLCD.jpg)
 
 #####In this work have been implemented:
 + Connection LCD display controllers are based on KS0066U to Raspberry PI;
 + Create a client server application. Raspberry Pi has received information from the client and prints it on the LCD screen.
 
+<br>To see a demo video, click the image.
+<br>[![image](http://h78563.s06.test-hf.su/images/RPiLCD.jpg)](http://rutube.ru/video/private/b8c501d43e98d5ea1fbca5403386d5a7/?p=lcWzdbw5P-FTmoP5Fnd81A)
 
 
 #####Info for work with server
